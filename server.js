@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const { createProxyMiddleware } = require("http-proxy-middleware");
+const {
+  createProxyMiddleware,
+  responseInterceptor,
+} = require("http-proxy-middleware");
 const { v4: uuidv4 } = require("uuid");
 var session = require("express-session");
 const app = express();
@@ -27,15 +30,19 @@ app.use(
   createProxyMiddleware("/api/authenticate", {
     target: process.env.API_SERVICE_URL,
     changeOrigin: true,
-    onProxyRes: function (proxyRes, req, res) {
-      if (proxyRes.statusMessage === "OK") {
-        proxyRes.on("data", function (data) {
-          data = JSON.parse(data.toString("utf-8"));
-          console.log(data.accesssToken);
-          req.session.accesssToken = data.accesssToken;
-        });
+    selfHandleResponse: true,
+    onProxyRes: responseInterceptor(
+      async (responseBuffer, proxyRes, req, res) => {
+        if (proxyRes.statusMessage === "OK") {
+          let { accesssToken, ...rest } = JSON.parse(
+            responseBuffer.toString("utf8")
+          );
+          req.session.accesssToken = accesssToken;
+          return JSON.stringify(rest);
+        }
+        return responseBuffer;
       }
-    },
+    ),
   })
 );
 
