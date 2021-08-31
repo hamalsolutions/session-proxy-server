@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "uuid": "^8.3.2"
+  },
+  "name": "session-proxy-server",
+  "description": "session proxy server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamalsolutions/session-proxy-server.git"
+  },
+  "author": "Manuel Castro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hamalsolutions/session-proxy-server/issues"
+  },
+  "homepage": "https://github.com/hamalsolutions/session-proxy-server#readme",
+  "devDependencies": {
+    "http-proxy-middleware": "^2.0.1"
+  }
+}
