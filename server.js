@@ -45,6 +45,15 @@ app.use(
     ),
   })
 );
+app.use(
+  createProxyMiddleware("/api", {
+    target: process.env.API_SERVICE_URL,
+    changeOrigin: true,
+    onProxyReq: function onProxyReq(proxyReq, req) {
+      proxyReq.setHeader("authorization", `Bearer ${req.session.accesssToken}`);
+    },
+  })
+);
 
 app.listen(process.env.PORT, () => {
   console.log(
