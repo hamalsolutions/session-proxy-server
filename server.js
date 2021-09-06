@@ -27,7 +27,6 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      domain: process.env.APP_URL,
       maxAge: 600000, // Time is in miliseconds
     },
   })
@@ -39,7 +38,7 @@ app.use(
     selfHandleResponse: true,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
-        if (proxyRes.statusMessage === "OK") {
+        if (proxyRes.statusCode === 201) {
           let { accesssToken, ...rest } = JSON.parse(
             responseBuffer.toString("utf8")
           );
