@@ -9,9 +9,14 @@ const { v4: uuidv4 } = require("uuid");
 var session = require("express-session");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 var corsOptions = {
-  origin: process.env.APP_URL,
+  origin: [
+    "https://develop.d24n0gojm8f6nt.amplifyapp.com",
+    "http://localhost:3000",
+  ],
+  allowedHeaders:
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-HTTP-Method-Override, Set-Cookie, Cookie",
   optionsSuccessStatus: 200,
 };
 
