@@ -25,7 +25,6 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      domain: process.env.APP_URL,
       maxAge: 600000, // Time is in miliseconds
     },
   })
