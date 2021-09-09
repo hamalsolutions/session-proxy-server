@@ -11,12 +11,7 @@ var session = require("express-session");
 const app = express();
 const PORT = process.env.PORT || 5000;
 var corsOptions = {
-  origin: [
-    "https://develop.d24n0gojm8f6nt.amplifyapp.com",
-    "http://localhost:3000",
-  ],
-  allowedHeaders:
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-HTTP-Method-Override, Set-Cookie, Cookie",
+  origin: ["https://develop.d24n0gojm8f6nt.amplifyapp.com"],
   optionsSuccessStatus: 200,
 };
 var mwCache = Object.create(null);
