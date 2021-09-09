@@ -32,7 +32,7 @@ function virtualHostSession(req, res, next) {
         domain:
           host === "localhost:5000"
             ? ""
-            : "https://develop.d24n0gojm8f6nt.amplifyapp.com/",
+            : "develop.d24n0gojm8f6nt.amplifyapp.com",
         httpOnly: true,
         maxAge: 600000, // Time is in miliseconds
       },
