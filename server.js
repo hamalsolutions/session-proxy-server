@@ -19,36 +19,36 @@ var corsOptions = {
     "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-HTTP-Method-Override, Set-Cookie, Cookie",
   optionsSuccessStatus: 200,
 };
+var mwCache = Object.create(null);
+function virtualHostSession(req, res, next) {
+  var host = req.get("host");
+  console.log(host);
+  var hostSession = mwCache[host];
+  if (!hostSession) {
+    hostSession = mwCache[host] = session({
+      genid: (req) => {
+        return uuidv4(); // use UUIDs for session IDs
+      },
+      secret: "veryimportantsecret",
+      name: "secretname",
+      resave: false,
+      saveUninitialized: true,
+      cookie: {
+        domain:
+          host === "localhost:5000"
+            ? ""
+            : "https://develop.d24n0gojm8f6nt.amplifyapp.com",
+        httpOnly: true,
+        maxAge: 600000, // Time is in miliseconds
+      },
+    });
+  }
+  hostSession(req, res, next);
+  //don't need to call next since hostSession will do it for you
+}
 
+app.use(virtualHostSession);
 app.use(cors(corsOptions));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://develop.d24n0gojm8f6nt.amplifyapp.com"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-HTTP-Method-Override, Set-Cookie, Cookie"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  next();
-});
-app.use(
-  session({
-    genid: (req) => {
-      return uuidv4(); // use UUIDs for session IDs
-    },
-    secret: "veryimportantsecret",
-    name: "secretname",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      maxAge: 600000, // Time is in miliseconds
-    },
-  })
-);
 app.use(
   createProxyMiddleware("/api/authenticate", {
     target: process.env.API_SERVICE_URL,
