@@ -14,35 +14,22 @@ var corsOptions = {
   origin: ["https://develop.d24n0gojm8f6nt.amplifyapp.com"],
   optionsSuccessStatus: 200,
 };
-var mwCache = Object.create(null);
-function virtualHostSession(req, res, next) {
-  var host = req.get("host");
-  console.log(host);
-  var hostSession = mwCache[host];
-  if (!hostSession) {
-    hostSession = mwCache[host] = session({
-      genid: (req) => {
-        return uuidv4(); // use UUIDs for session IDs
-      },
-      secret: "veryimportantsecret",
-      name: "secretname",
-      resave: false,
-      saveUninitialized: true,
-      cookie: {
-        domain:
-          host === "localhost:5000"
-            ? ""
-            : "develop.d24n0gojm8f6nt.amplifyapp.com",
-        httpOnly: true,
-        maxAge: 600000, // Time is in miliseconds
-      },
-    });
-  }
-  hostSession(req, res, next);
-  //don't need to call next since hostSession will do it for you
-}
-
-app.use(virtualHostSession);
+app.use(
+  session({
+    genid: (req) => {
+      return uuidv4(); // use UUIDs for session IDs
+    },
+    secret: "veryimportantsecret",
+    name: "secretname",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      domain: process.env.APP_URL,
+      maxAge: 600000, // Time is in miliseconds
+    },
+  })
+);
 app.use(cors(corsOptions));
 app.use(
   createProxyMiddleware("/api/authenticate", {
