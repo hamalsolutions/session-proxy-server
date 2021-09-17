@@ -1,16 +1,19 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const {
   createProxyMiddleware,
   responseInterceptor,
 } = require("http-proxy-middleware");
 const { v4: uuidv4 } = require("uuid");
 var session = require("express-session");
-const app = express();
 
-app.get("/", (req, res) => {
-  res.send("you are hiting the starting path");
-});
+const app = express();
+const PORT = process.env.PORT || 5000;
+var corsOptions = {
+  origin: ["https://develop.d24n0gojm8f6nt.amplifyapp.com"],
+  optionsSuccessStatus: 200,
+};
 app.use(
   session({
     genid: (req) => {
@@ -22,11 +25,11 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      domain: process.env.APP_URL,
       maxAge: 600000, // Time is in miliseconds
     },
   })
 );
+app.use(cors(corsOptions));
 app.use(
   createProxyMiddleware("/api/authenticate", {
     target: process.env.API_SERVICE_URL,
@@ -34,7 +37,7 @@ app.use(
     selfHandleResponse: true,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
-        if (proxyRes.statusMessage === "OK") {
+        if (proxyRes.statusCode === 201) {
           let { accesssToken, ...rest } = JSON.parse(
             responseBuffer.toString("utf8")
           );
@@ -55,9 +58,9 @@ app.use(
     },
   })
 );
-
+app.get("/", (req, res) => {
+  res.send("you are hiting the starting path");
+});
 app.listen(process.env.PORT, () => {
-  console.log(
-    `sever listening at ${process.env.PROXY_URL}:${process.env.PORT}`
-  );
+  console.log(`sever listening at ${process.env.PROXY_URL}:${PORT}`);
 });
