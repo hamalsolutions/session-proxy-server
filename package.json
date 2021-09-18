@@ -10,7 +10,7 @@
   },
   "name": "session-proxy-server",
   "description": "session proxy server",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "server.js",
   "scripts": {
     "test": "jest"
