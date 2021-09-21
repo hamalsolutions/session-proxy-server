@@ -11,7 +11,10 @@ var session = require("express-session");
 const app = express();
 const PORT = process.env.PORT || 5000;
 var corsOptions = {
-  origin: ["https://develop.d24n0gojm8f6nt.amplifyapp.com"],
+  origin: [
+    "https://develop.d24n0gojm8f6nt.amplifyapp.com",
+    "https://main.d2jb0x6kgjcrt6.amplifyapp.com/",
+  ],
   optionsSuccessStatus: 200,
 };
 app.use(
@@ -26,6 +29,7 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 600000, // Time is in miliseconds
+      secure: false,
     },
   })
 );
