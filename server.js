@@ -30,6 +30,7 @@ app.use(
       httpOnly: true,
       maxAge: 600000, // Time is in miliseconds
       secure: false,
+      sameSite:true
     },
   })
 );
