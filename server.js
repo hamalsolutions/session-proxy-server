@@ -26,11 +26,12 @@ app.use(
     name: "secretname",
     resave: false,
     saveUninitialized: true,
+    rolling: true,
     cookie: {
       httpOnly: true,
-      maxAge: 600000, // Time is in miliseconds
+      maxAge: 1800000, // Time is in miliseconds
       secure: false,
-      sameSite:true
+      sameSite: true,
     },
   })
 );
